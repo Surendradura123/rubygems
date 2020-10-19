@@ -4,35 +4,44 @@ class CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    if params[:title]
-      @courses = Course.where('title ILIKE ?', "%#{params[:title]}%") #case-insensitive
-    else
-      @courses = Course.all
-    end
+    #if params[:title]
+      #@courses = Course.where('title ILIKE ?', "%#{params[:title]}%") #case-insensitive
+    #else
+      #@courses = Course.all
+      #@q = Course.ransack(params[:q])
+      #@courses = @q.result.includes(:user)
+    #end
+    @ransack_courses = Course.ransack(params[:courses_search], search_key: :courses_search)
+    @courses = @ransack_courses.result.includes(:user)
   end
 
   # GET /courses/1
   # GET /courses/1.json
   def show
+    authorize @course
+    @lessons = @course.lessons
+    
   end
 
   # GET /courses/new
   def new
     @course = Course.new
+    authorize @course
 
   end
 
   # GET /courses/1/edit
   def edit
+    authorize @course
   end
 
   # POST /courses
   # POST /courses.json
   def create
     @course = Course.new(course_params)
+    authorize @course
     @course.user = current_user
     
-
     respond_to do |format|
       if @course.save
         format.html { redirect_to @course, notice: 'Course was successfully created.' }
@@ -47,6 +56,7 @@ class CoursesController < ApplicationController
   # PATCH/PUT /courses/1
   # PATCH/PUT /courses/1.json
   def update
+    authorize @course
     respond_to do |format|
       if @course.update(course_params)
         format.html { redirect_to @course, notice: 'Course was successfully updated.' }
@@ -61,6 +71,7 @@ class CoursesController < ApplicationController
   # DELETE /courses/1
   # DELETE /courses/1.json
   def destroy
+    authorize @course
     @course.destroy
     respond_to do |format|
       format.html { redirect_to courses_url, notice: 'Course was successfully destroyed.' }

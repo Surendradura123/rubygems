@@ -51,16 +51,14 @@ group :test do
 end
 
 gem "haml-rails", "~> 2.0"
-
 gem "bootstrap", "~> 4.4.1"
 gem "jquery-rails"
-
 gem "font-awesome-sass", "~> 5.12.0"
-
 gem 'simple_form'
-
 gem 'faker'
-
 gem 'devise'
-
 gem 'friendly_id', '~> 5.2.4'
+gem 'ransack'
+gem 'public_activity'
+gem "rolify"
+gem "pundit"
